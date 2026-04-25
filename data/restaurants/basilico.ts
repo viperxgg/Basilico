@@ -21,28 +21,7 @@ export const basilicoBranding: RestaurantBranding = {
     accentColor: "#c73f2f"
   },
   primaryActionLabel: "Ring och beställ",
-  heroImageRef: "/restaurants/basilico/media/italian-street.jpg",
-  heroImageAlt:
-    "Italiensk restauranggata som stämningsbild för Basilicos trattoriakänsla",
-  entranceImageRef: "/restaurants/basilico/media/basilico-logo.png",
-  entranceImageAlt: "Basilico logotyp",
-  galleryImages: [
-    {
-      src: "/restaurants/basilico/media/basilico-logo.png",
-      alt: "Basilico restauranglogotyp",
-      kind: "entrance"
-    },
-    {
-      src: "/restaurants/basilico/media/fresh-pasta.jpg",
-      alt: "Färsk pasta som stämningsbild från Basilicos kök",
-      kind: "food"
-    },
-    {
-      src: "/restaurants/basilico/media/wine-service.jpg",
-      alt: "Vinservering som allmän dryckesbild för Basilico",
-      kind: "food"
-    }
-  ],
+  galleryImages: [],
   orderingMode: "browsing-only",
   lastUpdatedLabel: "25 april 2026",
   openingHours: [

@@ -150,9 +150,11 @@ npm run seed:menu
 
 Seed expectations:
 
-- Creates or updates Basilico restaurant profile/menu data.
+- Creates or updates the Basilico restaurant profile fields.
+- Creates the first published menu release only when no release exists yet.
 - Keeps ordering mode as `browsing-only`.
 - Repeated runs must not duplicate menu data.
+- If menu data changes after a release already exists, update it through admin publishing or a controlled follow-up migration/seed plan.
 - Public menu should show Basilico categories, prices in SEK, opening hours, allergens, and phone CTA.
 
 ## 9. How To Test Login

@@ -1,12 +1,13 @@
 .panel {
   display: grid;
   gap: 24px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 26px;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid rgba(220, 207, 184, 0.95);
+  border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(255, 248, 235, 0.94));
+  color: #203127;
+  box-shadow: 0 24px 70px rgba(66, 48, 20, 0.1);
 }
 
 .header {
@@ -19,28 +20,40 @@
   gap: 8px;
 }
 
-.eyebrow {
+.eyebrow,
+.supportingLabel,
+.summaryLabel,
+.metricLabel,
+.sectionLabel {
   margin: 0;
-  color: #d7c3a1;
+  color: #9a7534;
   font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 800;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
 .title {
   margin: 0;
-  color: #f5f3ee;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: #173c25;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 4vw, 2.35rem);
+  font-weight: 820;
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+}
+
+.description,
+.sectionCopy,
+.orderStatus,
+.note {
+  margin: 0;
+  color: rgba(32, 49, 39, 0.72);
+  line-height: 1.65;
 }
 
 .description {
-  margin: 0;
-  max-width: 60ch;
-  color: rgba(245, 243, 238, 0.72);
-  line-height: 1.7;
+  max-width: 62ch;
 }
 
 .supportingInfo {
@@ -49,35 +62,36 @@
 }
 
 .supportingItem,
-.metricCard {
-  display: grid;
-  gap: 6px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.025);
+.metricCard,
+.orderSection,
+.nutritionSection {
+  border: 1px solid rgba(220, 207, 184, 0.88);
+  background: rgba(255, 252, 245, 0.72);
 }
 
-.supportingLabel,
-.summaryLabel,
-.metricLabel,
-.sectionLabel {
-  color: rgba(245, 243, 238, 0.58);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.supportingItem,
+.metricCard {
+  display: grid;
+  gap: 7px;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.supportingItem strong,
+.summaryItem strong,
+.metricValue,
+.statusText {
+  color: #173c25;
 }
 
 .supportingItem strong,
 .summaryItem strong {
-  color: #f5f3ee;
-  line-height: 1.5;
+  line-height: 1.45;
   text-transform: capitalize;
 }
 
 .statusText {
-  color: #d7c3a1;
+  font-weight: 850;
 }
 
 .body {
@@ -90,9 +104,7 @@
   display: grid;
   gap: 16px;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.02);
 }
 
 .sectionHeading,
@@ -101,43 +113,40 @@
   gap: 8px;
 }
 
-.sectionCopy {
-  margin: 0;
-  color: rgba(245, 243, 238, 0.68);
-}
-
 .quantityControl {
+  width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  width: fit-content;
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  padding: 7px;
+  border: 1px solid rgba(220, 207, 184, 0.95);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: #fffdf8;
 }
 
 .quantityButton {
-  width: 52px;
-  height: 52px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.03);
-  color: #f5f3ee;
-  font-size: 1.45rem;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(23, 60, 37, 0.12);
+  border-radius: 999px;
+  background: #eff5eb;
+  color: #173c25;
+  font-size: 1.1rem;
+  font-weight: 850;
   line-height: 1;
   transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
 .quantityButton:hover:not(:disabled),
 .quantityButton:focus-visible {
-  border-color: rgba(215, 195, 161, 0.38);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(23, 60, 37, 0.28);
+  background: #e3eedf;
   cursor: pointer;
 }
 
@@ -151,41 +160,43 @@
 }
 
 .quantityValue {
-  min-width: 36px;
-  color: #f5f3ee;
+  min-width: 34px;
+  color: #173c25;
   text-align: center;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.14rem;
+  font-weight: 850;
 }
 
 .summaryRow {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .summaryItem {
   display: grid;
   gap: 6px;
   padding: 14px 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(220, 207, 184, 0.72);
+  border-radius: 16px;
+  background: rgba(255, 253, 248, 0.86);
 }
 
 .primaryButton {
   width: 100%;
   min-height: 58px;
-  border: 1px solid rgba(215, 195, 161, 0.3);
+  border: 1px solid rgba(23, 60, 37, 0.14);
   border-radius: 18px;
-  background: linear-gradient(135deg, #d7c3a1 0%, #f0dfc3 100%);
-  color: #090909;
+  background: #173c25;
+  color: #fffdf8;
   font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
+  font-weight: 850;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  box-shadow: 0 20px 60px rgba(215, 195, 161, 0.18);
+  box-shadow: 0 16px 34px rgba(23, 60, 37, 0.18);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    filter 0.2s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -193,8 +204,8 @@
 .primaryButton:hover,
 .primaryButton:focus-visible {
   cursor: pointer;
-  filter: brightness(1.02);
-  box-shadow: 0 24px 70px rgba(215, 195, 161, 0.24);
+  filter: brightness(1.03);
+  box-shadow: 0 20px 42px rgba(23, 60, 37, 0.22);
 }
 
 .primaryButton:active {
@@ -207,30 +218,20 @@
   box-shadow: none;
 }
 
-.orderStatus {
-  margin: 0;
-  color: rgba(245, 243, 238, 0.72);
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
 .metricGrid {
   display: grid;
   gap: 12px;
 }
 
 .metricValue {
-  color: #f5f3ee;
   font-size: 1.8rem;
+  font-weight: 850;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .note {
-  margin: 0;
-  color: rgba(245, 243, 238, 0.56);
   font-size: 0.88rem;
-  line-height: 1.6;
 }
 
 @media (min-width: 640px) {

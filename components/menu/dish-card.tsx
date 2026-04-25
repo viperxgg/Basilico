@@ -36,6 +36,7 @@ function DishCardComponent({
 }: DishCardProps) {
   void restaurantSlug;
   void priority;
+  void detailLabel;
 
   const detailHref = tableLabel
     ? `/dish/${dish.slug}?table=${encodeURIComponent(tableLabel)}`
@@ -45,32 +46,20 @@ function DishCardComponent({
     ?.map((variant) => `${variant.label} ${formatPrice(variant.price)}`)
     .join(" · ");
   const isHighlighted = highlightedDishSlugs.has(dish.slug);
-  const allergenLabel =
-    dish.allergens.length > 0
-      ? `Allergener: ${dish.allergens.join(", ")}`
-      : "Allergener: fråga personalen vid osäkerhet";
+  const ingredientSummary = dish.ingredients.slice(0, 5).join(", ");
 
   return (
     <article
-      className={`${styles.menuCard} ${
-        isHighlighted ? styles.menuCardHighlighted : ""
+      className={`${styles.menuItem} ${
+        isHighlighted ? styles.menuItemHighlighted : ""
       }`}
     >
-      <Link
-        href={detailHref}
-        className={styles.cardCoverLink}
-        aria-label={detailAriaLabel}
-      />
+      <div className={styles.itemNumber} aria-hidden="true">
+        <span>{formatDishNumber(dish.number)}</span>
+      </div>
 
-      <div className={styles.cardContent}>
-        <span className={styles.dishNumberBadge}>
-          {formatDishNumber(dish.number)}
-        </span>
-        {isHighlighted ? (
-          <span className={styles.recommendedBadge}>Rekommenderas</span>
-        ) : null}
-
-        <div className={styles.headerRow}>
+      <div className={styles.itemBody}>
+        <div className={styles.itemHeader}>
           <h3 className={styles.itemName}>
             <Link
               href={detailHref}
@@ -83,52 +72,55 @@ function DishCardComponent({
           <span className={styles.itemPrice}>{formatDishPrice(dish)}</span>
         </div>
 
-        <p className={styles.itemDescription}>{dish.description}</p>
+        {isHighlighted ? (
+          <p className={styles.recommendation}>Husets tips</p>
+        ) : null}
+
+        {dish.description ? (
+          <p className={styles.itemDescription}>{dish.description}</p>
+        ) : null}
 
         {variantSummary ? (
           <p className={styles.variantSummary}>{variantSummary}</p>
         ) : null}
 
-        {dish.tags && dish.tags.length > 0 ? (
-          <div className={styles.tagList} aria-label="Taggar">
-            {dish.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
+        <div className={styles.itemMeta} aria-label="Näring och innehåll">
+          {dish.calories > 0 ? <span>{dish.calories} kcal</span> : null}
+          {ingredientSummary ? (
+            <>
+              {dish.calories > 0 ? <span aria-hidden="true">·</span> : null}
+              <span>{ingredientSummary}</span>
+            </>
+          ) : null}
+        </div>
+
+        {dish.allergens.length > 0 ? (
+          <div className={styles.allergenList} aria-label="Allergener">
+            <span className={styles.allergenLabel}>Allergener</span>
+            {dish.allergens.map((allergen) => (
+              <span key={allergen} className={styles.allergenChip}>
+                {allergen}
+              </span>
             ))}
           </div>
-        ) : null}
-
-        <div className={styles.itemMeta} aria-label="Näring och innehåll">
-          <span>{dish.calories > 0 ? `${dish.calories} kcal` : "Kcal ej angivet"}</span>
-          <span aria-hidden="true">·</span>
-          <span>{dish.ingredients.length} ingredienser</span>
-        </div>
-
-        <p className={styles.allergenLine}>{allergenLabel}</p>
-
-        <div className={styles.cardActions}>
-          <Link
-            href={detailHref}
-            className={styles.detailButton}
-            aria-label={detailAriaLabel}
-          >
-            {detailLabel}
-          </Link>
-
-          {onAdd ? (
-            <button
-              type="button"
-              className={styles.addButton}
-              aria-label={`Lägg till ${dish.name}`}
-              disabled={isAdding}
-              onClick={() => onAdd(dish)}
-            >
-              {isAdding ? "..." : "+"}
-            </button>
-          ) : (
-            <span className={styles.browseOnlyBadge}>Menyvisning</span>
-          )}
-        </div>
+        ) : (
+          <p className={styles.allergenNote}>
+            Fråga personalen vid allergi eller osäkerhet.
+          </p>
+        )}
       </div>
+
+      {onAdd ? (
+        <button
+          type="button"
+          className={styles.addButton}
+          aria-label={`Lägg till ${dish.name}`}
+          disabled={isAdding}
+          onClick={() => onAdd(dish)}
+        >
+          {isAdding ? "..." : "+"}
+        </button>
+      ) : null}
     </article>
   );
 }

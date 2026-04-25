@@ -90,6 +90,13 @@ function assertEnvShape(env: RuntimeEnv) {
     throw new Error("DATABASE_URL must be configured.");
   }
 
+  if (
+    !env.databaseUrl.startsWith("postgresql://") &&
+    !env.databaseUrl.startsWith("postgres://")
+  ) {
+    throw new Error("DATABASE_URL must point to PostgreSQL.");
+  }
+
   if (env.uploads.storageMode !== "local") {
     throw new Error("Only local upload storage is supported in the current runtime.");
   }

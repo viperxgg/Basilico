@@ -10,6 +10,23 @@ import {
 import type { CSSProperties } from "react";
 import Image from "next/image";
 
+import imgWineService from "@/9941173.webp";
+import imgKitchenPasta from "@/kramig-carbonara-high-18qqdy.webp";
+import imgKitchenMussels from "@/thumbnail_8358b768-1c24-4de7-bee6-d423fd1de1d0-high-l1cdcg.webp";
+import imgKitchenBurger from "@/thumbnail_img_4994-high-jbctkn.webp";
+import imgKitchenPlates from "@/thumbnail_img_5513-high-06ol4e.webp";
+import imgKitchenRice from "@/thumbnail_img_6606-high-cgmqzk.webp";
+import imgKitchenDessert from "@/thumbnail_img_6609-high.webp";
+import imgKitchenPizza from "@/thumbnail_img_6761-high.webp";
+import imgKitchenSeafoodPasta from "@/thumbnail_img_6762-high.webp";
+import imgKitchenRustic from "@/thumbnail_img_6762-high-yd56kx.webp";
+import imgKitchenGrill from "@/thumbnail_img_7355-high-nt6b3h.webp";
+import imgKitchenService from "@/thumbnail_img_7370-high-u7eboo.webp";
+import imgKitchenSteak from "@/thumbnail_img_7371-high.webp";
+import imgKitchenPizzaGreen from "@/thumbnail_img_7756-high-6gicix.webp";
+import imgKitchenFlatbread from "@/thumbnail_img_7771-high.webp";
+import imgKitchenDessertHoney from "@/thumbnail_img_7994-high.webp";
+
 import { normalizeTableId } from "@/lib/activity/normalize-table-id";
 import { useCart } from "@/components/cart/cart-provider";
 import { requestJson } from "@/lib/client/request-json";
@@ -71,6 +88,7 @@ const uiDictionary: Record<
     searchLabel: string;
     searchPlaceholder: string;
     callToOrder: string;
+    orderSoonLabel: string;
     orderingDisabledNotice: string;
     noSearchResults: string;
     categories: Record<string, string>;
@@ -114,6 +132,7 @@ const uiDictionary: Record<
     searchLabel: "Search menu",
     searchPlaceholder: "Search dishes, ingredients, allergens...",
     callToOrder: "Call to order",
+    orderSoonLabel: "Online ordering coming soon",
     orderingDisabledNotice: "Browse the menu freely. Please call us when you want to order.",
     noSearchResults: "No dishes matched your search.",
     categories: {
@@ -169,6 +188,7 @@ const uiDictionary: Record<
     searchLabel: "Sök i menyn",
     searchPlaceholder: "Sök rätt, råvara eller allergen...",
     callToOrder: "Ring och beställ",
+    orderSoonLabel: "Onlinebeställning kommer snart",
     orderingDisabledNotice:
       "Menyn är öppen för bläddring. Ring oss gärna när du vill beställa.",
     noSearchResults: "Inga rätter matchade din sökning.",
@@ -186,6 +206,64 @@ const uiDictionary: Record<
       "allergi-information": "Allergi",
       drycker: "Dryck"
     }
+  }
+};
+
+uiDictionary.sv = {
+  selection: "Alla rätter",
+  order: "Beställning",
+  details: "Detaljer",
+  needHelp: "Behöver du hjälp?",
+  allergens: "Allergener",
+  allergensCaption: "Berätta om dina behov",
+  cartTitle: "Din beställning",
+  emptyCart: "Inga rätter tillagda än",
+  close: "Stäng",
+  continueBrowsing: "Fortsätt välja",
+  requestWaiterTitle: "Be om service",
+  requestWaiterBody: "Skicka en snabb förfrågan till personalen från ditt bord.",
+  tableLabel: "Bordsreferens",
+  tablePlaceholder: "Bord 12",
+  requestWaiterSubmit: "Skicka",
+  requestWaiterActive: "Aktiv begäran",
+  allergenTitle: "Hjälp med allergener",
+  allergenBody: "Berätta för personalen vad du behöver hjälp med innan du beställer.",
+  allergenNoteLabel: "Kostnotering",
+  allergenNotePlaceholder: "Ingen gluten, svår nötallergi...",
+  allergenSubmit: "Skicka notering",
+  cancel: "Avbryt",
+  invalidTable: "Ange en giltig bordsreferens.",
+  invalidAllergenNote: "Ange en kostnotering.",
+  waiterToast: "Personal tillkallad",
+  waiterDuplicateToast: "Personalen är redan tillkallad",
+  waiterActiveMessage: "Din servicebegäran är redan aktiv för detta bord.",
+  waiterFailed: "Det gick inte att skicka servicebegäran just nu. Försök igen.",
+  allergenToast: "Allergenhjälp begärd",
+  allergenFailed: "Det gick inte att skicka allergenbegäran just nu. Försök igen.",
+  addedToast: "Tillagd i beställningen",
+  openNow: "Öppet nu",
+  closedNow: "Stängt nu",
+  openingStatusFallback: "Se öppettider",
+  searchLabel: "Sök i menyn",
+  searchPlaceholder: "Sök rätt, råvara eller allergen...",
+  callToOrder: "Ring och beställ",
+  orderSoonLabel: "Onlinebeställning kommer snart",
+  orderingDisabledNotice:
+    "Just nu är menyn endast för visning. Beställning sker via personalen eller telefon.",
+  noSearchResults: "Inga rätter matchade din sökning.",
+  categories: {
+    all: "Alla rätter",
+    forratter: "Förrätter",
+    "a-la-carte": "À la carte",
+    pasta: "Pasta",
+    pizza: "Pizza",
+    gourmetpizzor: "Gourmet",
+    sallad: "Sallad",
+    desserts: "Dessert",
+    "avhamtning-pizza": "Avhämtning",
+    barnmeny: "Barn",
+    "allergi-information": "Allergi",
+    drycker: "Dryck"
   }
 };
 
@@ -333,9 +411,24 @@ export function MenuTemplateHome({
     () => getOpeningStatus(restaurant.branding.openingHours, copy),
     [copy, restaurant.branding.openingHours]
   );
-  const publicGalleryImages =
-    restaurant.branding.galleryImages?.filter((image) => image.kind !== "entrance") ??
-    [];
+  const publicGalleryImages = [
+    { src: imgKitchenPizza, alt: "Stämningsbild från Basilicos kök", kind: "atmosphere" },
+    { src: imgKitchenPasta, alt: "Italienska smaker från Basilico", kind: "atmosphere" },
+    { src: imgKitchenSteak, alt: "Varm restaurangkänsla hos Basilico", kind: "atmosphere" },
+    { src: imgKitchenMussels, alt: "Serveringsbild från Basilico", kind: "atmosphere" },
+    { src: imgKitchenBurger, alt: "Måltidskänsla från Basilicos kök", kind: "atmosphere" },
+    { src: imgKitchenRice, alt: "Råvaror och smaker från Basilico", kind: "atmosphere" },
+    { src: imgKitchenDessert, alt: "Söt avslutning som stämningsbild", kind: "atmosphere" },
+    { src: imgKitchenDessertHoney, alt: "Dessertkänsla från Basilico", kind: "atmosphere" },
+    { src: imgWineService, alt: "Dryckesservering som atmosfärsbild", kind: "atmosphere" },
+    { src: imgKitchenService, alt: "Tallrikar från Basilicos kök", kind: "atmosphere" },
+    { src: imgKitchenGrill, alt: "Grillad restaurangkänsla från Basilico", kind: "atmosphere" },
+    { src: imgKitchenRustic, alt: "Rustik matupplevelse hos Basilico", kind: "atmosphere" },
+    { src: imgKitchenPizzaGreen, alt: "Pizzakänsla från Basilico", kind: "atmosphere" },
+    { src: imgKitchenSeafoodPasta, alt: "Medelhavskänsla från Basilico", kind: "atmosphere" },
+    { src: imgKitchenPlates, alt: "Basilicos serveringsmiljö", kind: "atmosphere" },
+    { src: imgKitchenFlatbread, alt: "Italiensk bakkänsla från Basilico", kind: "atmosphere" }
+  ];
   const heroGalleryImages = publicGalleryImages.slice(0, 2);
   const detailTableLabel = routeTableLabel || undefined;
   const waiterTableId = useMemo(
@@ -707,7 +800,9 @@ export function MenuTemplateHome({
               </span>
             </a>
           ) : null}
-          <span className={styles.browsingPill}>Bara menyvisning</span>
+          <span className={styles.browsingPill}>
+            {orderingEnabled ? "Beställning aktiv" : "Bara menyvisning"}
+          </span>
         </div>
       </header>
 
@@ -733,6 +828,14 @@ export function MenuTemplateHome({
             <p className={styles.heroKicker}>{heroKicker}</p>
             <h1 className={styles.heroTitle}>{restaurant.branding.name}</h1>
           </div>
+          
+          <div className={styles.heroStatusRow}>
+            <span className={`${styles.statusPill} ${openingStatus === copy.openNow ? styles.statusOpen : ''}`}>
+              <span className={styles.pulseDot} />
+              {openingStatus}
+            </span>
+          </div>
+
           <p className={styles.heroDescription}>
             {restaurant.branding.description}
           </p>
@@ -740,14 +843,28 @@ export function MenuTemplateHome({
           <div className={styles.heroActions}>
             {phoneHref ? (
               <a className={styles.callOrderLink} href={phoneHref}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 {copy.callToOrder}
                 {restaurant.branding.phone ? (
-                  <span>{restaurant.branding.phone}</span>
+                  <strong>{restaurant.branding.phone}</strong>
                 ) : null}
               </a>
             ) : null}
             {!orderingEnabled ? (
-              <p className={styles.orderingNotice}>{copy.orderingDisabledNotice}</p>
+              <button
+                type="button"
+                className={styles.orderingSoonButton}
+                disabled
+                aria-disabled="true"
+              >
+                {copy.orderSoonLabel}
+              </button>
+            ) : null}
+            {!orderingEnabled ? (
+              <div className={styles.infoBadge}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>{copy.orderingDisabledNotice}</span>
+              </div>
             ) : null}
           </div>
 
@@ -796,7 +913,7 @@ export function MenuTemplateHome({
               aria-label="Bilder från restaurangen"
             >
               {heroGalleryImages.map((image) => (
-                <div key={image.src} className={styles.heroGalleryFrame}>
+                <div key={image.alt} className={styles.heroGalleryFrame}>
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -841,7 +958,7 @@ export function MenuTemplateHome({
         </div>
       </nav>
 
-      <section className={styles.searchPanel} aria-label={copy.searchLabel}>
+      <section className={`${styles.searchPanel} reveal`} aria-label={copy.searchLabel} style={{ animationDelay: '0.2s' }}>
         <label className={styles.searchField}>
           <span>{copy.searchLabel}</span>
           <input
@@ -858,11 +975,12 @@ export function MenuTemplateHome({
         {visibleSections.length === 0 ? (
           <div className={styles.emptySearchResult}>{copy.noSearchResults}</div>
         ) : null}
-        {visibleSections.map(({ category, dishes }) => (
+        {visibleSections.map(({ category, dishes }, index) => (
           <section
             key={category.id}
             id={`section-${category.id}`}
-            className={styles.menuSection}
+            className={`${styles.menuSection} reveal`}
+            style={{ animationDelay: `${0.3 + index * 0.1}s` }}
             ref={(element) => {
               sectionRefs.current[category.id] = element;
             }}
@@ -894,7 +1012,7 @@ export function MenuTemplateHome({
         ))}
 
         {publicGalleryImages.length > 0 ? (
-          <section className={styles.gallerySection} aria-labelledby="gallery-title">
+          <section className={`${styles.gallerySection} reveal`} aria-labelledby="gallery-title" style={{ animationDelay: '0.5s' }}>
             <div className={styles.galleryHeader}>
               <p className={styles.galleryEyebrow}>Från Basilicos kök</p>
               <h2 id="gallery-title" className={styles.galleryTitle}>
@@ -907,7 +1025,7 @@ export function MenuTemplateHome({
             </div>
             <div className={styles.galleryGrid}>
               {publicGalleryImages.map((image) => (
-                <figure key={image.src} className={styles.galleryCard}>
+                <figure key={image.alt} className={styles.galleryCard}>
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -922,7 +1040,7 @@ export function MenuTemplateHome({
           </section>
         ) : null}
 
-        <section className={styles.helpSection}>
+        <section className={`${styles.helpSection} reveal`} style={{ animationDelay: '0.6s' }}>
           <h2 className={styles.helpTitle}>{copy.needHelp}</h2>
 
           <div className={styles.helpGrid}>
@@ -932,26 +1050,30 @@ export function MenuTemplateHome({
               onClick={handleCallWaiter}
               aria-pressed={hasActiveRouteWaiterRequest}
             >
-              <span className={styles.helpIcon} aria-hidden="true">Ring</span>
-              <span className={styles.helpText}>
-                <strong>
+              <span className={styles.helpIcon} aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <div className={styles.helpText}>
+                <h4>
                   {hasActiveRouteWaiterRequest
                     ? copy.requestWaiterActive
                     : "Tillkalla personal"}
-                </strong>
-                <small>Skicka en serviceförfrågan från bordet.</small>
-              </span>
+                </h4>
+                <p>Skicka en serviceförfrågan från bordet.</p>
+              </div>
             </button>
             <button
               type="button"
               className={styles.helpCard}
               onClick={handleAllergens}
             >
-              <span className={styles.helpIcon} aria-hidden="true">Allergi</span>
-              <span className={styles.helpText}>
-                <strong>{copy.allergens}</strong>
-                <small>{copy.allergensCaption}</small>
+              <span className={styles.helpIcon} aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </span>
+              <div className={styles.helpText}>
+                <h4>{copy.allergens}</h4>
+                <p>{copy.allergensCaption}</p>
+              </div>
             </button>
           </div>
 

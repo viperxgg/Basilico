@@ -1,106 +1,80 @@
-.menuCard {
+.menuItem {
   position: relative;
-  overflow: hidden;
-  border: 1px solid #eadfcd;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 14px 32px rgba(61, 44, 22, 0.08);
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(220, 207, 184, 0.78);
+  background: transparent;
 }
 
-.menuCard::before {
+.menuItem:first-child {
+  padding-top: 4px;
+}
+
+.menuItem:last-child {
+  border-bottom: 0;
+  padding-bottom: 4px;
+}
+
+.menuItemHighlighted::before {
   content: "";
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 4px;
-  background: linear-gradient(180deg, #0f633d, #ffffff 48%, #d23a2e);
-  opacity: 0.78;
+  left: -18px;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    var(--basilico-green),
+    var(--basilico-gold),
+    var(--basilico-red)
+  );
 }
 
-.menuCardHighlighted {
-  border-color: rgba(15, 99, 61, 0.26);
-  background:
-    linear-gradient(90deg, rgba(232, 241, 231, 0.7), transparent 48%),
-    #ffffff;
-}
-
-.cardCoverLink {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.cardCoverLink:focus-visible {
-  outline: 3px solid rgba(210, 58, 46, 0.44);
-  outline-offset: -3px;
-}
-
-.menuCard:hover {
-  border-color: rgba(15, 99, 61, 0.28);
-  box-shadow: 0 18px 38px rgba(61, 44, 22, 0.12);
-  transform: translateY(-1px);
-}
-
-.cardContent {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px 14px;
-  padding: 18px 18px 18px 20px;
-}
-
-.dishNumberBadge {
-  grid-row: 1 / span 3;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(15, 99, 61, 0.18);
-  border-radius: 50%;
-  background: #e8f1e7;
-  color: #0f633d;
-  font-size: 0.72rem;
-  font-weight: 900;
+.itemNumber {
+  min-width: 34px;
+  padding-top: 2px;
+  color: rgba(30, 66, 47, 0.52);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
-.recommendedBadge {
-  width: fit-content;
+.itemNumber span {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 26px;
   min-height: 26px;
-  padding: 0 10px;
-  border: 1px solid rgba(210, 58, 46, 0.18);
+  border: 1px solid rgba(220, 207, 184, 0.85);
   border-radius: 999px;
-  background: rgba(210, 58, 46, 0.08);
-  color: #9f251d;
-  font-size: 0.68rem;
-  font-weight: 900;
-  text-transform: uppercase;
+  background: rgba(255, 252, 245, 0.82);
 }
 
-.headerRow {
-  grid-column: 2;
-  display: flex;
+.itemBody {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.itemHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
+  gap: 16px;
 }
 
 .itemName {
   margin: 0;
-  color: #17251b;
+  color: var(--basilico-green);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.08rem, 2.8vw, 1.28rem);
-  font-weight: 850;
-  line-height: 1.22;
-  letter-spacing: 0;
+  font-weight: 760;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
 }
 
 .titleLink {
@@ -108,191 +82,161 @@
   text-decoration: none;
 }
 
+.titleLink:focus-visible {
+  outline: 3px solid rgba(195, 50, 42, 0.22);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
 .itemPrice {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  color: #17251b;
+  color: var(--basilico-green);
   font-size: 1rem;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .itemPrice::after {
   content: "";
   display: block;
-  width: 42px;
-  height: 3px;
-  margin-top: 6px;
-  margin-left: auto;
+  width: 34px;
+  height: 2px;
+  margin: 7px 0 0 auto;
   border-radius: 999px;
-  background: linear-gradient(90deg, #0f633d 0 52%, #ffffff 52% 66%, #d23a2e 66% 100%);
+  background: linear-gradient(
+    90deg,
+    var(--basilico-green) 0 33%,
+    rgba(255, 255, 255, 0) 33% 48%,
+    var(--basilico-red) 48% 100%
+  );
 }
 
-.itemDescription,
-.variantSummary {
-  grid-column: 2;
-}
-
-.itemDescription {
-  max-width: 72ch;
+.recommendation {
+  width: fit-content;
   margin: 0;
-  color: #4f5c50;
-  font-size: 0.94rem;
-  line-height: 1.55;
-}
-
-.variantSummary {
-  margin: -2px 0 0;
-  color: #465146;
-  font-size: 0.84rem;
-  font-weight: 800;
-  line-height: 1.45;
-}
-
-.tagList {
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tagList span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 0 9px;
-  border: 1px solid rgba(15, 99, 61, 0.14);
-  border-radius: 999px;
-  background: #f7fbf4;
-  color: #34513c;
-  font-size: 0.7rem;
-  font-weight: 800;
-}
-
-.itemMeta {
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  color: #667066;
-  font-size: 0.76rem;
-  line-height: 1.4;
-}
-
-.allergenLine {
-  grid-column: 2;
-  margin: -2px 0 0;
-  padding: 9px 10px;
-  border: 1px solid rgba(210, 58, 46, 0.14);
-  border-radius: 12px;
-  background: rgba(255, 250, 240, 0.86);
-  color: #5f453f;
-  font-size: 0.78rem;
-  font-weight: 750;
-  line-height: 1.45;
-}
-
-.cardActions {
-  grid-column: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 2px;
-}
-
-.detailButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 0.62rem 1rem;
-  border: 1px solid #eadfcd;
-  border-radius: 999px;
-  background: #fffaf0;
-  color: #17251b;
-  font-size: 0.84rem;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.addButton {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  background: #0f633d;
-  color: #ffffff;
-  font-size: 1.35rem;
-  font-weight: 900;
-  box-shadow: 0 10px 24px rgba(15, 99, 61, 0.2);
-  transition: transform 160ms ease;
-}
-
-.browseOnlyBadge {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 13px;
-  border: 1px solid rgba(15, 99, 61, 0.16);
-  border-radius: 999px;
-  background: #e8f1e7;
-  color: #0f633d;
-  font-size: 0.76rem;
-  font-weight: 900;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(195, 50, 42, 0.42);
+  color: var(--basilico-red);
+  font-size: 0.72rem;
+  font-weight: 780;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.detailButton:hover,
-.detailButton:active {
-  border-color: rgba(15, 99, 61, 0.24);
-  background: #f7fbf4;
+.itemDescription {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+  line-height: 1.52;
 }
 
-.addButton:hover {
-  transform: translateY(-1px);
+.variantSummary,
+.itemMeta,
+.allergenNote {
+  margin: 0;
+  color: rgba(70, 83, 73, 0.78);
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
-.addButton:active {
-  transform: translateY(0);
+.variantSummary {
+  color: #84652d;
+  font-weight: 720;
 }
 
-.titleLink:focus-visible,
-.detailButton:focus-visible,
+.itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.allergenList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.allergenLabel {
+  color: rgba(30, 66, 47, 0.72);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.allergenChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 9px;
+  border: 1px solid rgba(220, 207, 184, 0.92);
+  border-radius: 999px;
+  background: rgba(255, 252, 245, 0.86);
+  color: rgba(33, 50, 39, 0.82);
+  font-size: 0.73rem;
+  font-weight: 680;
+}
+
+.addButton {
+  align-self: start;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--basilico-green);
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 850;
+  box-shadow: 0 10px 22px rgba(24, 70, 44, 0.18);
+}
+
+.addButton:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .addButton:focus-visible {
-  outline: 3px solid rgba(210, 58, 46, 0.44);
+  outline: 3px solid rgba(195, 50, 42, 0.24);
   outline-offset: 3px;
 }
 
+@media (hover: hover) {
+  .menuItem:hover .itemName {
+    color: #123820;
+  }
+
+  .menuItem:hover .itemNumber span {
+    border-color: rgba(30, 66, 47, 0.22);
+  }
+}
+
 @media (max-width: 640px) {
-  .cardContent {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 8px 12px;
-    padding: 16px 14px 16px 18px;
+  .menuItem {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+    padding: 16px 0;
   }
 
-  .dishNumberBadge {
-    width: 40px;
-    height: 40px;
-    font-size: 0.66rem;
+  .itemNumber {
+    min-width: 0;
   }
 
-  .headerRow {
-    align-items: flex-start;
-    gap: 10px;
+  .itemNumber span {
+    min-width: auto;
+    min-height: auto;
+    border: 0;
+    background: transparent;
   }
 
-  .itemPrice {
-    font-size: 0.94rem;
+  .itemHeader {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
   }
 
-  .itemDescription {
-    font-size: 0.9rem;
-  }
-
-  .cardActions {
-    align-items: flex-start;
+  .addButton {
+    justify-self: start;
   }
 }

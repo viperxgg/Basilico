@@ -47,7 +47,7 @@ export const categories: MenuCategory[] = [
     id: "avhamtning-pizza",
     label: "Avhämtning Pizza",
     shortLabel: "Avhämtning",
-    description: "Ring oss för avhämtning. Familjepizzor bekräftas vid beställning."
+    description: "Avhämtningsalternativ visas som information och bekräftas av personalen."
   },
   {
     id: "barnmeny",
@@ -65,7 +65,7 @@ export const categories: MenuCategory[] = [
     id: "drycker",
     label: "Alkoholdrycker / Drycker",
     shortLabel: "Dryck",
-    description: "Dryckesutbudet är informationsvisning. Alkohol är inte aktiverat för onlinebeställning.",
+    description: "Dryckesutbudet visas som information. Alkohol beställs endast via personalen.",
     isAlcohol: true
   }
 ];

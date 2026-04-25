@@ -19,6 +19,7 @@ type DishInput = {
   priceLabel?: string;
   badges?: DishRecord["badges"];
   variants?: DishRecord["variants"];
+  status?: DishRecord["status"];
 };
 
 function dish(input: DishInput): DishRecord {
@@ -37,7 +38,7 @@ function dish(input: DishInput): DishRecord {
     badges: input.badges,
     tags: input.tags,
     variants: input.variants,
-    status: "available",
+    status: input.status ?? "available",
     imageAlt: `Menyinformation för ${input.name}`
   };
 }
@@ -442,6 +443,7 @@ export const dishes: DishRecord[] = [
     price: 0,
     priceLabel: "Fråga oss",
     allergens: ["mjölk", "ägg", "gluten"],
+    status: "sold-out",
     tags: ["Utbud kan variera"]
   }),
   dish({
@@ -454,30 +456,33 @@ export const dishes: DishRecord[] = [
     price: 0,
     priceLabel: "Fråga oss",
     allergens: ["mjölk"],
+    status: "sold-out",
     tags: ["Utbud kan variera"]
   }),
 
   dish({
     number: 77,
     slug: "avhamtning-pizza-info",
-    name: "Ring för avhämtning",
+    name: "Avhämtning pizza",
     categoryId: "avhamtning-pizza",
-    description: "Pizza kan beställas för avhämtning via telefon. Onlinebeställning är inte aktiverad.",
-    ingredients: ["Telefonbeställning", "Avhämtning"],
+    description: "Fråga personalen om aktuella avhämtningsalternativ och tillgänglighet.",
+    ingredients: ["Avhämtning", "Information"],
     price: 0,
-    priceLabel: "Ring 0417-13 13 3",
-    tags: ["Onlinebeställning kommer snart"]
+    priceLabel: "Fråga personalen",
+    tags: ["Information"],
+    status: "sold-out"
   }),
   dish({
     number: 78,
     slug: "familjepizza-info",
     name: "Familjepizza",
     categoryId: "avhamtning-pizza",
-    description: "Familjepizzor finns för flera pizzor. Pris och tillgänglighet bekräftas när du ringer.",
-    ingredients: ["Familjestorlek", "Telefonbeställning"],
+    description: "Familjepizzor finns för flera pizzor. Pris och tillgänglighet bekräftas av personalen.",
+    ingredients: ["Familjestorlek", "Information"],
     price: 0,
     priceLabel: "Fråga oss",
-    tags: ["Pris bekräftas vid beställning"]
+    tags: ["Pris bekräftas vid beställning"],
+    status: "sold-out"
   }),
 
   dish({
@@ -489,6 +494,7 @@ export const dishes: DishRecord[] = [
     ingredients: ["Tomatsås", "Ost"],
     price: 0,
     priceLabel: "Fråga oss",
+    status: "sold-out",
     allergens: ["gluten", "mjölk"]
   }),
   dish({
@@ -500,6 +506,7 @@ export const dishes: DishRecord[] = [
     ingredients: ["Pasta"],
     price: 0,
     priceLabel: "Fråga oss",
+    status: "sold-out",
     allergens: ["gluten"]
   }),
   dish({
@@ -511,6 +518,7 @@ export const dishes: DishRecord[] = [
     ingredients: ["Fisk", "Pommes frites"],
     price: 0,
     priceLabel: "Fråga oss",
+    status: "sold-out",
     allergens: ["fisk", "gluten"]
   }),
 
@@ -524,6 +532,7 @@ export const dishes: DishRecord[] = [
     ingredients: ["Glutenintolerans", "Laktosintolerans", "Äggallergi", "Nötallergi", "Skaldjursallergi"],
     price: 0,
     priceLabel: "Fråga oss",
+    status: "sold-out",
     tags: ["Informera personalen innan beställning"]
   }),
 
@@ -533,11 +542,12 @@ export const dishes: DishRecord[] = [
     name: "Alkoholdrycker",
     categoryId: "drycker",
     description:
-      "Italienska viner, cocktails och öl visas endast som information. Alkohol är inte aktiverat för onlinebeställning.",
+      "Italienska viner, cocktails och öl visas endast som information. Alkohol beställs via personalen.",
     ingredients: ["Vin", "Cocktails", "Öl"],
     price: 0,
     priceLabel: "På plats",
-    tags: ["Informationsvisning", "Ej onlinebeställning"]
+    tags: ["Information", "Via personalen"],
+    status: "sold-out"
   }),
   dish({
     number: 84,
@@ -548,6 +558,7 @@ export const dishes: DishRecord[] = [
     ingredients: ["Alkoholfri dryck"],
     price: 0,
     priceLabel: "Fråga oss",
+    status: "sold-out",
     tags: ["Utbud kan variera"]
   })
 ];

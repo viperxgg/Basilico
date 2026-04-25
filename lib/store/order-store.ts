@@ -237,7 +237,7 @@ class OrderStore {
     const items = input.items.map((item, index) => {
       const dish = getDishById(restaurant, item.dishId);
 
-      if (!dish || dish.status !== "available") {
+      if (!dish || dish.status !== "available" || dish.price.amount <= 0) {
         throw new AppError(`Dish "${item.dishId}" is not available.`, 400);
       }
       const variant = item.variantId

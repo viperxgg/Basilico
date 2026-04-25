@@ -36,4 +36,8 @@ data/*.db-wal
 public/restaurants/*/dishes/uploads/*
 artifacts/
 
+# handover secrets
+handover/private/
+*.local.md
+
 .vercel

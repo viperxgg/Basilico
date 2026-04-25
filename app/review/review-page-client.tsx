@@ -109,7 +109,7 @@ export function ReviewPageClient() {
     };
 
     try {
-      await requestJson("/api/orders", {
+      await requestJson("/api/public/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -127,7 +127,7 @@ export function ReviewPageClient() {
     } catch (error) {
       if (error instanceof ClientRequestError && error.status === null) {
         try {
-          const response = await fetch("/api/orders", {
+          const response = await fetch("/api/public/orders", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -173,7 +173,8 @@ export function ReviewPageClient() {
           <p className={styles.eyebrow}>Bordsbeställning</p>
           <h1 className={styles.title}>Granska din beställning</h1>
           <p className={styles.description}>
-            Kontrollera antal, ange bord och skicka beställningen när allt stämmer.
+            Kontrollera rätterna, ange bordsnummer och skicka beställningen
+            direkt till restaurangen.
           </p>
         </header>
 
@@ -331,7 +332,7 @@ export function ReviewPageClient() {
                 </label>
 
                 <label className={styles.fieldLabel}>
-                  <span>Meddelande</span>
+                  <span>Allergier eller särskilda önskemål</span>
                   <textarea
                     value={notes}
                     onChange={(event) => {
@@ -339,7 +340,7 @@ export function ReviewPageClient() {
                       setSubmitError(null);
                     }}
                     className={styles.textArea}
-                    placeholder="Valfritt meddelande till köket eller personalen"
+                    placeholder="Skriv allergier, specialkost eller andra önskemål till köket och personalen."
                     disabled={isSubmitting}
                   />
                 </label>
@@ -368,7 +369,7 @@ export function ReviewPageClient() {
               >
                 {isSubmitting
                   ? siteConfig.orderMessages.submitting
-                  : "Skicka beställning"}
+                  : "Bekräfta beställning"}
               </button>
 
               <Link href={menuHref} className={styles.secondaryButton}>

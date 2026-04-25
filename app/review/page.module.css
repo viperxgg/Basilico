@@ -183,7 +183,7 @@
 }
 
 .textArea {
-  min-height: 98px;
+  min-height: 150px;
   padding: 14px;
   resize: vertical;
 }

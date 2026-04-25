@@ -237,15 +237,22 @@ export function CartProvider({ children }: PropsWithChildren) {
 
       {showCartUi ? (
         <>
-          {!isOpen ? (
+          {!isOpen && totalItems > 0 ? (
             <button
               type="button"
               className={styles.cartButton}
-              aria-label={`Öppna beställning med ${totalItems} val`}
-              onClick={toggleCart}
+              aria-label={`Granska beställning med ${totalItems} val`}
+              onClick={continueToReview}
             >
-              <span className={styles.cartButtonLabel}>Beställning</span>
-              <span className={styles.cartButtonCount}>{totalItems}</span>
+              <span className={styles.cartButtonCopy}>
+                <span className={styles.cartButtonLabel}>Granska beställning</span>
+                <span className={styles.cartButtonMeta}>
+                  {totalItems} {totalItems === 1 ? "val" : "val"}
+                </span>
+              </span>
+              <span className={styles.cartButtonCount}>
+                {formatPrice({ amount: totalPrice, currency: cartCurrency })}
+              </span>
             </button>
           ) : null}
 

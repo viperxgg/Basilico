@@ -13,11 +13,11 @@ export default function ReviewPage() {
           <section className={styles.emptyState}>
             <p className={styles.eyebrow}>Basilico</p>
             <h1 className={styles.emptyTitle}>
-              Onlinebeställning kommer snart
+              Beställning är tillfälligt pausad
             </h1>
             <p className={styles.emptyDescription}>
-              Den digitala menyn är öppen för bläddring. Ring oss gärna om du
-              vill beställa avhämtning eller har frågor om allergener.
+              Menyn fungerar som QR-meny vid bordet. Tillkalla personal om du
+              vill beställa eller har frågor om allergener.
             </p>
             <p className={styles.emptyDescription}>
               {siteConfig.orderMessages.orderingDisabled}

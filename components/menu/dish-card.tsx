@@ -47,6 +47,7 @@ function DishCardComponent({
     .join(" · ");
   const isHighlighted = highlightedDishSlugs.has(dish.slug);
   const ingredientSummary = dish.ingredients.slice(0, 5).join(", ");
+  const canAdd = Boolean(onAdd) && dish.status === "available" && dish.price.amount > 0;
 
   return (
     <article
@@ -110,13 +111,13 @@ function DishCardComponent({
         )}
       </div>
 
-      {onAdd ? (
+      {canAdd ? (
         <button
           type="button"
           className={styles.addButton}
           aria-label={`Lägg till ${dish.name}`}
           disabled={isAdding}
-          onClick={() => onAdd(dish)}
+          onClick={() => onAdd?.(dish)}
         >
           {isAdding ? "..." : "+"}
         </button>

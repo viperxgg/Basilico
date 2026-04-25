@@ -40,7 +40,8 @@ export function DishDetailOrderPanel({
   const orderTotal = selectedPrice.amount * orderedQuantity;
 
   const canDecrease = quantity > 1;
-  const canOrder = orderingEnabled && dish.status === "available";
+  const canOrder =
+    orderingEnabled && dish.status === "available" && selectedPrice.amount > 0;
 
   const handleOrder = () => {
     if (!canOrder) {

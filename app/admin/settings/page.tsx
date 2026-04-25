@@ -10,7 +10,7 @@ export default async function AdminSettingsPage() {
     <OperationsPlaceholder
       title="Restauranginställningar"
       description="Profil, öppettider, kontaktuppgifter och bildgalleri är modellerade för Basilico och ska ändras kontrollerat inför lansering."
-      status="Status: onlinebeställning är låst till browsing-only tills aktiveringschecklistan är klar."
+      status="Status: QR-beställning är aktiverad för Basilico och ska följas upp med produktionsrökprov."
     />
   );
 }

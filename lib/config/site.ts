@@ -15,23 +15,22 @@ function resolveSiteUrl() {
 
 export const siteConfig = {
   name: "Basilico",
-  description: "Digital meny för Basilico i Tomelilla.",
+  description: "Smart QR-meny för Basilico i Tomelilla.",
   url: resolveSiteUrl(),
   defaultRestaurantSlug: "basilico",
-  orderingMode: "browsing-only" as "enabled" | "browsing-only",
+  orderingMode: "enabled" as "enabled" | "browsing-only",
   orderMessages: {
-    success: "Din beställning har skickats!",
-    successDescription: "Tack! Köket har mottagit din beställning.",
+    success: "Beställningen har skickats",
+    successDescription: "Tack! Restaurangen har tagit emot din beställning.",
     genericError: "Något gick fel. Försök igen.",
     genericHelp: "Kontakta personalen om problemet kvarstår.",
     closed: "Restaurangen är stängd just nu",
-    orderingDisabled:
-      "Onlinebeställning kommer snart. Ring oss gärna på 0417-13 13 3.",
+    orderingDisabled: "Beställning är tillfälligt pausad. Tillkalla personal vid bordet.",
     emptyCart: "Din beställning är tom.",
     tableRequired: "Ange bordsnummer innan du skickar beställningen.",
     invalidTable: "Ange ett giltigt bordsnummer innan du skickar beställningen.",
     invalidQuantity: "Kontrollera antal och försök igen.",
     submitting: "Skickar beställning...",
-    addToCart: "Lägger till..."
+    addToCart: "Uppdaterar beställning..."
   }
 } as const;

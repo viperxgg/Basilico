@@ -131,9 +131,9 @@ const uiDictionary: Record<
     openingStatusFallback: "See opening hours",
     searchLabel: "Search menu",
     searchPlaceholder: "Search dishes, ingredients, allergens...",
-    callToOrder: "Call to order",
-    orderSoonLabel: "Online ordering coming soon",
-    orderingDisabledNotice: "Browse the menu freely. Please call us when you want to order.",
+    callToOrder: "Call staff",
+    orderSoonLabel: "Order from the table",
+    orderingDisabledNotice: "The order is sent to the restaurant.",
     noSearchResults: "No dishes matched your search.",
     categories: {
       all: "Selection",
@@ -187,10 +187,9 @@ const uiDictionary: Record<
     openingStatusFallback: "Se öppettider",
     searchLabel: "Sök i menyn",
     searchPlaceholder: "Sök rätt, råvara eller allergen...",
-    callToOrder: "Ring och beställ",
-    orderSoonLabel: "Onlinebeställning kommer snart",
-    orderingDisabledNotice:
-      "Menyn är öppen för bläddring. Ring oss gärna när du vill beställa.",
+    callToOrder: "Tillkalla personal",
+    orderSoonLabel: "Beställ direkt från bordet",
+    orderingDisabledNotice: "Beställningen skickas till restaurangen.",
     noSearchResults: "Inga rätter matchade din sökning.",
     categories: {
       all: "Alla rätter",
@@ -213,31 +212,31 @@ uiDictionary.sv = {
   selection: "Alla rätter",
   order: "Beställning",
   details: "Detaljer",
-  needHelp: "Behöver du hjälp?",
+  needHelp: "Service vid bordet",
   allergens: "Allergener",
   allergensCaption: "Berätta om dina behov",
   cartTitle: "Din beställning",
   emptyCart: "Inga rätter tillagda än",
   close: "Stäng",
   continueBrowsing: "Fortsätt välja",
-  requestWaiterTitle: "Be om service",
-  requestWaiterBody: "Skicka en snabb förfrågan till personalen från ditt bord.",
-  tableLabel: "Bordsreferens",
+  requestWaiterTitle: "Tillkalla personal",
+  requestWaiterBody: "Ange bordsnummer och skicka en förfrågan till personalen.",
+  tableLabel: "Bordsnummer",
   tablePlaceholder: "Bord 12",
-  requestWaiterSubmit: "Skicka",
-  requestWaiterActive: "Aktiv begäran",
+  requestWaiterSubmit: "Skicka förfrågan",
+  requestWaiterActive: "Förfrågan skickad",
   allergenTitle: "Hjälp med allergener",
   allergenBody: "Berätta för personalen vad du behöver hjälp med innan du beställer.",
-  allergenNoteLabel: "Kostnotering",
-  allergenNotePlaceholder: "Ingen gluten, svår nötallergi...",
+  allergenNoteLabel: "Allergier eller särskilda önskemål",
+  allergenNotePlaceholder: "Till exempel glutenfritt, svår nötallergi eller fråga till personalen...",
   allergenSubmit: "Skicka notering",
   cancel: "Avbryt",
-  invalidTable: "Ange en giltig bordsreferens.",
+  invalidTable: "Ange ett giltigt bordsnummer.",
   invalidAllergenNote: "Ange en kostnotering.",
   waiterToast: "Personal tillkallad",
   waiterDuplicateToast: "Personalen är redan tillkallad",
-  waiterActiveMessage: "Din servicebegäran är redan aktiv för detta bord.",
-  waiterFailed: "Det gick inte att skicka servicebegäran just nu. Försök igen.",
+  waiterActiveMessage: "Din förfrågan är redan aktiv för detta bord.",
+  waiterFailed: "Det gick inte att skicka förfrågan just nu. Försök igen.",
   allergenToast: "Allergenhjälp begärd",
   allergenFailed: "Det gick inte att skicka allergenbegäran just nu. Försök igen.",
   addedToast: "Tillagd i beställningen",
@@ -246,10 +245,9 @@ uiDictionary.sv = {
   openingStatusFallback: "Se öppettider",
   searchLabel: "Sök i menyn",
   searchPlaceholder: "Sök rätt, råvara eller allergen...",
-  callToOrder: "Ring och beställ",
-  orderSoonLabel: "Onlinebeställning kommer snart",
-  orderingDisabledNotice:
-    "Just nu är menyn endast för visning. Beställning sker via personalen eller telefon.",
+  callToOrder: "Tillkalla personal",
+  orderSoonLabel: "Beställ direkt från bordet",
+  orderingDisabledNotice: "Beställningen skickas till restaurangen.",
   noSearchResults: "Inga rätter matchade din sökning.",
   categories: {
     all: "Alla rätter",
@@ -358,6 +356,7 @@ export function MenuTemplateHome({
   const [serviceDialog, setServiceDialog] = useState<ServiceDialog>(null);
   const [isSubmittingAssistance, setIsSubmittingAssistance] = useState(false);
   const [waiterTable, setWaiterTable] = useState(routeTableLabel);
+  const [waiterMessage, setWaiterMessage] = useState("");
   const [allergenTable, setAllergenTable] = useState(routeTableLabel);
   const [allergenNote, setAllergenNote] = useState("");
   const [dialogError, setDialogError] = useState<string | null>(null);
@@ -402,11 +401,6 @@ export function MenuTemplateHome({
   const heroKicker = restaurant.branding.tagline
     ? `${restaurant.branding.location} · ${restaurant.branding.tagline}`
     : restaurant.branding.location;
-  const phoneHref =
-    restaurant.branding.phoneHref ??
-    (restaurant.branding.phone
-      ? `tel:${restaurant.branding.phone.replace(/[^\d+]/g, "")}`
-      : undefined);
   const openingStatus = useMemo(
     () => getOpeningStatus(restaurant.branding.openingHours, copy),
     [copy, restaurant.branding.openingHours]
@@ -636,6 +630,7 @@ export function MenuTemplateHome({
   const submitWaiterRequest = useCallback(async () => {
     const trimmedTable = waiterTable.trim();
     const trimmedTableId = normalizeTableId(trimmedTable);
+    const trimmedMessage = waiterMessage.trim();
 
     if (trimmedTable.length < 1 || isSubmittingAssistance) {
       setDialogError(copy.invalidTable);
@@ -664,7 +659,7 @@ export function MenuTemplateHome({
         body: JSON.stringify({
           tableLabel: trimmedTable,
           requestType: "call_waiter",
-          message: "Customer requested waiter assistance."
+          message: trimmedMessage || "Gästen vill tillkalla personal."
         }),
         timeoutMs: 8000,
         fallbackMessage: copy.waiterFailed
@@ -684,6 +679,7 @@ export function MenuTemplateHome({
       );
       showToast(`${copy.waiterToast}: ${trimmedTable}`);
       setWaiterTable(routeTableLabel || "");
+      setWaiterMessage("");
       closeServiceDialog();
     } catch (error) {
       setDialogError(
@@ -705,6 +701,7 @@ export function MenuTemplateHome({
     isSubmittingAssistance,
     routeTableLabel,
     showToast,
+    waiterMessage,
     waiterTable
   ]);
 
@@ -789,19 +786,18 @@ export function MenuTemplateHome({
         </a>
 
         <div className={styles.navControls}>
-          {phoneHref ? (
-            <a
-              className={styles.callWaiterButton}
-              href={phoneHref}
-            >
-              <span aria-hidden="true">Ring</span>
-              <span className={styles.callWaiterText}>
-                {restaurant.branding.primaryActionLabel}
-              </span>
-            </a>
-          ) : null}
+          <button
+            type="button"
+            className={styles.callWaiterButton}
+            onClick={handleCallWaiter}
+          >
+            <span aria-hidden="true">Service</span>
+            <span className={styles.callWaiterText}>
+              {restaurant.branding.primaryActionLabel}
+            </span>
+          </button>
           <span className={styles.browsingPill}>
-            {orderingEnabled ? "Beställning aktiv" : "Bara menyvisning"}
+            {orderingEnabled ? "QR-beställning aktiv" : "Beställning pausad"}
           </span>
         </div>
       </header>
@@ -841,31 +837,18 @@ export function MenuTemplateHome({
           </p>
 
           <div className={styles.heroActions}>
-            {phoneHref ? (
-              <a className={styles.callOrderLink} href={phoneHref}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                {copy.callToOrder}
-                {restaurant.branding.phone ? (
-                  <strong>{restaurant.branding.phone}</strong>
-                ) : null}
-              </a>
-            ) : null}
-            {!orderingEnabled ? (
-              <button
-                type="button"
-                className={styles.orderingSoonButton}
-                disabled
-                aria-disabled="true"
-              >
-                {copy.orderSoonLabel}
-              </button>
-            ) : null}
-            {!orderingEnabled ? (
-              <div className={styles.infoBadge}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>{copy.orderingDisabledNotice}</span>
-              </div>
-            ) : null}
+            <button
+              type="button"
+              className={styles.callOrderLink}
+              onClick={handleCallWaiter}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              {copy.callToOrder}
+            </button>
+            <div className={styles.infoBadge}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>{copy.orderingDisabledNotice}</span>
+            </div>
           </div>
 
           <div className={styles.heroStatusGrid}>
@@ -876,7 +859,9 @@ export function MenuTemplateHome({
             <div className={styles.heroStatusCard}>
               <span>Digital meny</span>
               <strong>
-                {orderingEnabled ? "Beställ vid bordet" : "Bläddra i lugn och ro"}
+                {orderingEnabled
+                  ? "Skanna, välj och beställ direkt från bordet"
+                  : "Beställning pausad"}
               </strong>
             </div>
             {restaurant.branding.addressLine ? (
@@ -1126,6 +1111,20 @@ export function MenuTemplateHome({
                     }}
                     placeholder={copy.tablePlaceholder}
                     className={styles.dialogInput}
+                  />
+                </label>
+
+                <label className={styles.dialogField}>
+                  <span>Meddelande till personalen</span>
+                  <textarea
+                    value={waiterMessage}
+                    onChange={(event) => {
+                      setWaiterMessage(event.target.value);
+                      setDialogError(null);
+                    }}
+                    placeholder="Valfritt, till exempel: Vi behöver hjälp med menyn."
+                    className={styles.dialogTextarea}
+                    maxLength={280}
                   />
                 </label>
 

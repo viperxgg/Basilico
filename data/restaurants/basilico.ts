@@ -10,9 +10,9 @@ export const basilicoBranding: RestaurantBranding = {
   phoneHref: "tel:+4641713133",
   concept: "Authentic Italian food with a Swedish/local ingredient twist",
   description:
-    "Välkommen till Basilico i Tomelilla. Här möter klassiska italienska smaker lokala råvaror i en varm, familjevänlig restaurangmiljö.",
+    "Skanna, välj och beställ direkt från bordet. Basilico serverar klassiska italienska smaker med lokala råvaror i en varm, familjevänlig restaurangmiljö.",
   footerNote:
-    "Basilico · Banmästaregatan 2, Tomelilla · Har du allergier? Fråga oss gärna.",
+    "Basilico · Banmästaregatan 2, Tomelilla · Har du allergier? Skriv det i beställningen eller tillkalla personal.",
   locale: "sv-SE",
   currency: "SEK",
   cuisine: ["italian", "pizza", "pasta", "swedish-local", "family"],
@@ -20,9 +20,9 @@ export const basilicoBranding: RestaurantBranding = {
     primaryColor: "#2f6b3f",
     accentColor: "#c73f2f"
   },
-  primaryActionLabel: "Ring och beställ",
+  primaryActionLabel: "Tillkalla personal",
   galleryImages: [],
-  orderingMode: "browsing-only",
+  orderingMode: "enabled",
   lastUpdatedLabel: "25 april 2026",
   openingHours: [
     { day: "Måndag", hours: "Stängt" },

@@ -71,94 +71,100 @@ async function seed() {
     return;
   }
 
-  await prisma.$transaction(async (tx) => {
-    const release = await tx.menuRelease.create({
-      data: {
-        id: crypto.randomUUID(),
-        restaurantId,
-        version: 1,
-        status: "PUBLISHED",
-        title: "Basilico published menu",
-        notes: `Seeded from Basilico static menu data. items=${dishes.length}`,
-        publishedAt: new Date()
-      }
-    });
-
-    const categoryIdBySlug = new Map();
-
-    for (const [index, category] of categories.entries()) {
-      const row = await tx.menuCategory.create({
+  await prisma.$transaction(
+    async (tx) => {
+      const release = await tx.menuRelease.create({
         data: {
           id: crypto.randomUUID(),
           restaurantId,
-          menuReleaseId: release.id,
-          slug: category.id,
-          name: category.label,
-          shortLabel: category.shortLabel,
-          description: category.description ?? null,
-          sortOrder: index + 1
+          version: 1,
+          status: "PUBLISHED",
+          title: "Basilico published menu",
+          notes: `Seeded from Basilico static menu data. items=${dishes.length}`,
+          publishedAt: new Date()
         }
       });
 
-      categoryIdBySlug.set(category.id, row.id);
-    }
+      const categoryIdBySlug = new Map();
 
-    for (const [index, menuDish] of dishes.entries()) {
-      const categoryId = categoryIdBySlug.get(menuDish.categoryId);
-      if (!categoryId) {
-        throw new Error(`Missing category for dish ${menuDish.slug}`);
+      for (const [index, category] of categories.entries()) {
+        const row = await tx.menuCategory.create({
+          data: {
+            id: crypto.randomUUID(),
+            restaurantId,
+            menuReleaseId: release.id,
+            slug: category.id,
+            name: category.label,
+            shortLabel: category.shortLabel,
+            description: category.description ?? null,
+            sortOrder: index + 1
+          }
+        });
+
+        categoryIdBySlug.set(category.id, row.id);
       }
 
-      const row = await tx.menuDish.create({
-        data: {
-          id: crypto.randomUUID(),
-          restaurantId,
-          menuReleaseId: release.id,
-          categoryId,
-          slug: menuDish.slug,
-          menuNumber: menuDish.number,
-          name: menuDish.name,
-          description: menuDish.description,
-          priceMinor: menuDish.price.amount,
-          currencyCode: menuDish.price.currency,
-          calories: menuDish.calories,
-          imageUrl: null,
-          imageAlt: null,
-          status:
-            menuDish.status === "sold-out"
-              ? "SOLD_OUT"
-              : menuDish.status === "hidden"
-                ? "HIDDEN"
-                : "AVAILABLE",
-          sortOrder: index + 1
+      for (const [index, menuDish] of dishes.entries()) {
+        const categoryId = categoryIdBySlug.get(menuDish.categoryId);
+        if (!categoryId) {
+          throw new Error(`Missing category for dish ${menuDish.slug}`);
         }
-      });
 
-      for (const [ingredientIndex, ingredient] of menuDish.ingredients.entries()) {
-        await tx.dishIngredient.create({
+        const row = await tx.menuDish.create({
           data: {
             id: crypto.randomUUID(),
             restaurantId,
-            menuDishId: row.id,
-            name: ingredient,
-            sortOrder: ingredientIndex + 1
+            menuReleaseId: release.id,
+            categoryId,
+            slug: menuDish.slug,
+            menuNumber: menuDish.number,
+            name: menuDish.name,
+            description: menuDish.description,
+            priceMinor: menuDish.price.amount,
+            currencyCode: menuDish.price.currency,
+            calories: menuDish.calories,
+            imageUrl: null,
+            imageAlt: null,
+            status:
+              menuDish.status === "sold-out"
+                ? "SOLD_OUT"
+                : menuDish.status === "hidden"
+                  ? "HIDDEN"
+                  : "AVAILABLE",
+            sortOrder: index + 1
           }
         });
-      }
 
-      for (const [allergenIndex, allergen] of menuDish.allergens.entries()) {
-        await tx.dishAllergen.create({
-          data: {
-            id: crypto.randomUUID(),
-            restaurantId,
-            menuDishId: row.id,
-            name: allergen,
-            sortOrder: allergenIndex + 1
-          }
-        });
+        for (const [ingredientIndex, ingredient] of menuDish.ingredients.entries()) {
+          await tx.dishIngredient.create({
+            data: {
+              id: crypto.randomUUID(),
+              restaurantId,
+              menuDishId: row.id,
+              name: ingredient,
+              sortOrder: ingredientIndex + 1
+            }
+          });
+        }
+
+        for (const [allergenIndex, allergen] of menuDish.allergens.entries()) {
+          await tx.dishAllergen.create({
+            data: {
+              id: crypto.randomUUID(),
+              restaurantId,
+              menuDishId: row.id,
+              name: allergen,
+              sortOrder: allergenIndex + 1
+            }
+          });
+        }
       }
+    },
+    {
+      maxWait: 10_000,
+      timeout: 60_000
     }
-  });
+  );
 
   console.log(`Seeded Basilico menu: ${categories.length} categories, ${dishes.length} items.`);
 }

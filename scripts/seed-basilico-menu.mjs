@@ -161,8 +161,8 @@ async function seed() {
       }
     },
     {
-      maxWait: 10_000,
-      timeout: 60_000
+      maxWait: 20_000,
+      timeout: 300_000
     }
   );
 

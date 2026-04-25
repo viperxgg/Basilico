@@ -1,0 +1,106 @@
+.page {
+  min-height: 100vh;
+  padding: 108px 16px 48px;
+  background:
+    radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 36%),
+    #0b0d0b;
+}
+
+.hero,
+.categories,
+.card {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.hero {
+  display: grid;
+  gap: 14px;
+  min-height: 320px;
+  padding: 28px;
+  border-radius: 28px;
+}
+
+.heroLineShort,
+.heroLineLarge,
+.heroLineMedium,
+.pill,
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.heroLineShort,
+.heroLineLarge,
+.heroLineMedium {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.heroLineShort {
+  width: 160px;
+  height: 14px;
+}
+
+.heroLineLarge {
+  width: min(420px, 82%);
+  height: 56px;
+}
+
+.heroLineMedium {
+  width: min(520px, 92%);
+  height: 18px;
+}
+
+.categories {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 10px;
+  border-radius: 999px;
+}
+
+.pill {
+  width: 110px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+  width: min(1120px, 100%);
+  margin: 18px auto 0;
+}
+
+.card {
+  min-height: 152px;
+  border-radius: 22px;
+}
+
+.heroLineShort::after,
+.heroLineLarge::after,
+.heroLineMedium::after,
+.pill::after,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -1,0 +1,100 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(circle at top, rgba(105, 134, 166, 0.18), transparent 28%),
+    linear-gradient(180deg, #0b1016 0%, #0d151d 42%, #111c25 100%);
+  color: #f5f7fa;
+}
+
+.card {
+  width: min(100%, 48rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.75rem;
+  padding: 1.6rem;
+  background: rgba(12, 17, 24, 0.88);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 235, 0.64);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  line-height: 1.04;
+}
+
+.subtitle {
+  margin: 0.75rem 0 1.4rem;
+  color: rgba(226, 234, 242, 0.8);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.option {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  color: inherit;
+}
+
+.option:hover {
+  border-color: rgba(173, 205, 237, 0.36);
+  transform: translateY(-1px);
+}
+
+.role {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 235, 0.62);
+}
+
+.optionTitle {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.optionBody {
+  margin: 0;
+  color: rgba(226, 234, 242, 0.8);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+.signOutButton {
+  min-height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: #f5f7fa;
+  cursor: pointer;
+}

@@ -1,0 +1,17 @@
+.env
+.env.*
+
+artifacts/
+tmp/
+temp/
+*.tmp
+*.temp
+*.log
+.next-dev.*.log
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/*.sqlite
+data/*.sqlite3
+*.sqlite
+*.sqlite3

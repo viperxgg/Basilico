@@ -1,0 +1,100 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(circle at top, rgba(108, 126, 148, 0.18), transparent 28%),
+    linear-gradient(180deg, #0b1016 0%, #0e151d 40%, #111b24 100%);
+  color: #f5f7fa;
+}
+
+.card {
+  width: min(100%, 28rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(12, 17, 24, 0.88);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 235, 0.64);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.subtitle {
+  margin: 0.75rem 0 1.5rem;
+  color: rgba(226, 234, 242, 0.8);
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: rgba(231, 238, 244, 0.88);
+}
+
+.input {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f7fbff;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(145, 197, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(67, 124, 179, 0.22);
+}
+
+.button {
+  min-height: 3.2rem;
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, #d5e9ff 0%, #9fc3ea 100%);
+  color: #0d1620;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.error {
+  margin: 0;
+  border-radius: 0.9rem;
+  padding: 0.8rem 0.9rem;
+  background: rgba(158, 49, 49, 0.18);
+  color: #ffd6d6;
+}
+
+.hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: rgba(214, 224, 235, 0.64);
+}

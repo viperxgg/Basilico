@@ -1,0 +1,233 @@
+.page {
+  min-height: 100vh;
+  background: #0c1117;
+  color: #f4f1ea;
+  padding: 32px 20px 64px;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #e0b46b;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 720px;
+  color: rgba(244, 241, 234, 0.72);
+  line-height: 1.6;
+}
+
+.message {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(224, 180, 107, 0.14);
+  border: 1px solid rgba(224, 180, 107, 0.3);
+}
+
+.primaryButton,
+.secondaryButton {
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  min-height: 48px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primaryButton {
+  background: #e0b46b;
+  color: #11161d;
+  font-weight: 700;
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f1ea;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.releasePanel,
+.editorGrid,
+.emptyState {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.snapshotGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.snapshotCard {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.snapshotLabel {
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.58);
+}
+
+.snapshotValue {
+  font-size: 1.2rem;
+}
+
+.snapshotMeta {
+  color: rgba(244, 241, 234, 0.7);
+}
+
+.releaseLinks {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.releaseList {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.releaseCard {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.releaseMeta {
+  display: grid;
+  gap: 6px;
+}
+
+.releaseMeta p,
+.releaseMeta small {
+  margin: 0;
+}
+
+.releaseTopline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.publishedBadge,
+.draftBadge,
+.archivedBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.publishedBadge {
+  background: rgba(85, 175, 112, 0.16);
+  color: #baf0c9;
+  border-color: rgba(85, 175, 112, 0.28);
+}
+
+.draftBadge {
+  background: rgba(224, 180, 107, 0.16);
+  color: #ffd89e;
+  border-color: rgba(224, 180, 107, 0.28);
+}
+
+.archivedBadge {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(244, 241, 234, 0.72);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.editorGrid {
+  margin-top: 28px;
+  display: grid;
+  gap: 24px;
+}
+
+.editorSection {
+  display: grid;
+  gap: 16px;
+}
+
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.editorCard {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.emptyState {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 840px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .snapshotGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .releaseCard,
+  .sectionHeading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

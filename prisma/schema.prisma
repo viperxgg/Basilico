@@ -1,0 +1,498 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRoleCode {
+  ADMIN
+  KITCHEN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum SessionStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum MenuReleaseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MenuDishStatus {
+  AVAILABLE
+  SOLD_OUT
+  HIDDEN
+}
+
+enum RestaurantTableStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum OrderStatus {
+  NEW
+  CLAIMED
+  IN_PROGRESS
+  READY
+  COMPLETED
+  CANCELED
+}
+
+enum OrderSource {
+  CUSTOMER_MENU
+  ADMIN
+}
+
+enum AssistanceRequestType {
+  CALL_WAITER
+  ALLERGEN_HELP
+}
+
+enum AssistanceRequestStatus {
+  NEW
+  CLAIMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum AssistanceSource {
+  CUSTOMER_MENU
+  ADMIN
+}
+
+enum AuditLogActorType {
+  USER
+  SYSTEM
+}
+
+enum AuditLogTargetType {
+  MENU_RELEASE
+  MENU_CATEGORY
+  MENU_DISH
+  RESTAURANT_TABLE
+  USER
+  ORDER
+  ASSISTANCE_REQUEST
+  SETTINGS
+}
+
+enum LoginEventResult {
+  SUCCESS
+  FAILURE
+  LOCKED
+}
+
+model Restaurant {
+  id                  String               @id @default(cuid())
+  slug                String               @unique
+  name                String
+  shortName           String?
+  domain              String?              @unique
+  locale              String               @default("en-SE")
+  currencyCode        String               @default("SEK")
+  timezone            String               @default("Europe/Stockholm")
+  addressLine         String?
+  phone               String?
+  concept             String?
+  openingHoursJson    Json?
+  galleryImagesJson   Json?
+  orderingMode        String               @default("browsing-only")
+  locationLabel       String?
+  description         String?
+  footerNote          String?
+  primaryActionLabel  String?              @default("Call waiter")
+  isActive            Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  users               User[]
+  userRoles           UserRole[]
+  sessions            Session[]
+  menuReleases        MenuRelease[]
+  menuCategories      MenuCategory[]
+  menuDishes          MenuDish[]
+  dishIngredients     DishIngredient[]
+  dishAllergens       DishAllergen[]
+  restaurantTables    RestaurantTable[]
+  orders              Order[]
+  orderItems          OrderItem[]
+  assistanceRequests  AssistanceRequest[]
+  auditLogs           AuditLog[]
+  loginEvents         LoginEvent[]
+
+  @@map("restaurants")
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  username            String
+  passwordHash        String
+  displayName         String
+  status              UserStatus           @default(ACTIVE)
+  lastLoginAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  roles               UserRole[]
+  sessions            Session[]
+  claimedOrders       Order[]              @relation("OrderClaimedByUser")
+  handledAssistance   AssistanceRequest[]  @relation("AssistanceHandledByUser")
+  auditLogs           AuditLog[]           @relation("AuditLogActorUser")
+  loginEvents         LoginEvent[]
+  createdMenuReleases MenuRelease[]        @relation("MenuReleaseCreatedByUser")
+
+  @@unique([restaurantId, username])
+  @@unique([id, restaurantId])
+  @@index([restaurantId, status])
+  @@map("users")
+}
+
+model UserRole {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  userId              String
+  roleCode            UserRoleCode
+  createdAt           DateTime             @default(now())
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  user                User                 @relation(fields: [userId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+
+  @@unique([restaurantId, userId, roleCode])
+  @@index([restaurantId, roleCode])
+  @@map("user_roles")
+}
+
+model Session {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  userId              String
+  sessionTokenHash    String               @unique
+  status              SessionStatus        @default(ACTIVE)
+  expiresAt           DateTime
+  revokedAt           DateTime?
+  lastSeenAt          DateTime?
+  ipAddress           String?
+  userAgent           String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  user                User                 @relation(fields: [userId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+
+  @@index([restaurantId, userId])
+  @@index([restaurantId, status, expiresAt])
+  @@map("sessions")
+}
+
+model MenuRelease {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  version             Int
+  status              MenuReleaseStatus    @default(DRAFT)
+  title               String?
+  notes               String?
+  createdByUserId     String?
+  publishedAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  createdByUser       User?                @relation("MenuReleaseCreatedByUser", fields: [createdByUserId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  categories          MenuCategory[]
+  dishes              MenuDish[]
+  orders              Order[]
+
+  @@unique([restaurantId, version])
+  @@unique([id, restaurantId])
+  @@index([restaurantId, status])
+  @@index([restaurantId, status, publishedAt(sort: Desc)])
+  @@map("menu_releases")
+}
+
+model MenuCategory {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  menuReleaseId       String
+  slug                String
+  name                String
+  shortLabel          String?
+  description         String?
+  sortOrder           Int
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuRelease         MenuRelease          @relation(fields: [menuReleaseId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+  dishes              MenuDish[]
+
+  @@unique([menuReleaseId, slug])
+  @@unique([menuReleaseId, sortOrder])
+  @@unique([id, restaurantId, menuReleaseId])
+  @@unique([id, restaurantId])
+  @@index([restaurantId, menuReleaseId])
+  @@index([menuReleaseId, sortOrder])
+  @@map("menu_categories")
+}
+
+model MenuDish {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  menuReleaseId       String
+  categoryId          String
+  slug                String
+  menuNumber          Int?
+  name                String
+  description         String
+  priceMinor          Int
+  currencyCode        String
+  calories            Int?
+  imageUrl            String?
+  imageAlt            String?
+  status              MenuDishStatus       @default(AVAILABLE)
+  sortOrder           Int?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuRelease         MenuRelease          @relation(fields: [menuReleaseId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+  category            MenuCategory         @relation(fields: [categoryId, restaurantId, menuReleaseId], references: [id, restaurantId, menuReleaseId], onDelete: Restrict)
+  ingredients         DishIngredient[]
+  allergens           DishAllergen[]
+  orderItems          OrderItem[]
+
+  @@unique([menuReleaseId, slug])
+  @@unique([menuReleaseId, menuNumber])
+  @@unique([id, restaurantId])
+  @@index([restaurantId, menuReleaseId, status])
+  @@index([categoryId, status])
+  @@index([menuReleaseId, categoryId, status, sortOrder])
+  @@index([menuReleaseId, status, menuNumber])
+  @@map("menu_dishes")
+}
+
+model DishIngredient {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  menuDishId          String
+  name                String
+  sortOrder           Int
+  createdAt           DateTime             @default(now())
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuDish            MenuDish             @relation(fields: [menuDishId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+
+  @@unique([menuDishId, sortOrder])
+  @@index([restaurantId, menuDishId])
+  @@index([menuDishId, sortOrder])
+  @@map("dish_ingredients")
+}
+
+model DishAllergen {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  menuDishId          String
+  name                String
+  sortOrder           Int
+  createdAt           DateTime             @default(now())
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuDish            MenuDish             @relation(fields: [menuDishId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+
+  @@unique([menuDishId, sortOrder])
+  @@index([restaurantId, menuDishId])
+  @@index([menuDishId, sortOrder])
+  @@map("dish_allergens")
+}
+
+model RestaurantTable {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  name                String
+  normalizedCode      String
+  sortOrder           Int?
+  seats               Int?
+  status              RestaurantTableStatus @default(ACTIVE)
+  qrToken             String?              @unique
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  orders              Order[]
+  assistanceRequests  AssistanceRequest[]
+
+  @@unique([restaurantId, normalizedCode])
+  @@unique([id, restaurantId])
+  @@index([restaurantId, status])
+  @@map("restaurant_tables")
+}
+
+model Order {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  menuReleaseId       String?
+  restaurantTableId   String?
+  tableRefNormalized  String
+  tableLabelSnapshot  String
+  guestCount          Int?
+  notes               String?
+  subtotalMinor       Int
+  totalMinor          Int
+  currencyCode        String
+  status              OrderStatus          @default(NEW)
+  source              OrderSource          @default(CUSTOMER_MENU)
+  claimedByUserId     String?
+  claimedAt           DateTime?
+  completedAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuRelease         MenuRelease?         @relation(fields: [menuReleaseId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  restaurantTable     RestaurantTable?     @relation(fields: [restaurantTableId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  claimedByUser       User?                @relation("OrderClaimedByUser", fields: [claimedByUserId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  items               OrderItem[]
+
+  @@unique([id, restaurantId])
+  @@index([restaurantId, status, createdAt])
+  @@index([restaurantId, tableRefNormalized, status])
+  @@index([restaurantId, menuReleaseId])
+  @@index([restaurantId, restaurantTableId])
+  @@index([restaurantId, status, updatedAt(sort: Desc)])
+  @@index([restaurantId, claimedByUserId, status, updatedAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                       String               @id @default(cuid())
+  orderId                  String
+  restaurantId             String
+  menuDishId               String?
+  lineNumber               Int
+  quantity                 Int
+  dishNameSnapshot         String
+  dishSlugSnapshot         String?
+  dishPriceSnapshotMinor   Int
+  currencyCodeSnapshot     String
+  categoryNameSnapshot     String?
+  caloriesSnapshot         Int?
+  createdAt                DateTime             @default(now())
+
+  order                    Order                @relation(fields: [orderId, restaurantId], references: [id, restaurantId], onDelete: Cascade)
+  restaurant               Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  menuDish                 MenuDish?            @relation(fields: [menuDishId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  ingredientSnapshots      OrderItemIngredientSnapshot[]
+  allergenSnapshots        OrderItemAllergenSnapshot[]
+
+  @@unique([orderId, lineNumber])
+  @@index([restaurantId, menuDishId])
+  @@map("order_items")
+}
+
+model OrderItemIngredientSnapshot {
+  id                       String               @id @default(cuid())
+  orderItemId              String
+  name                     String
+  sortOrder                Int
+
+  orderItem                OrderItem            @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  @@unique([orderItemId, sortOrder])
+  @@map("order_item_ingredient_snapshots")
+}
+
+model OrderItemAllergenSnapshot {
+  id                       String               @id @default(cuid())
+  orderItemId              String
+  name                     String
+  sortOrder                Int
+
+  orderItem                OrderItem            @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  @@unique([orderItemId, sortOrder])
+  @@map("order_item_allergen_snapshots")
+}
+
+model AssistanceRequest {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  restaurantTableId   String?
+  tableRefNormalized  String
+  tableLabelSnapshot  String
+  requestType         AssistanceRequestType
+  message             String
+  status              AssistanceRequestStatus @default(NEW)
+  source              AssistanceSource     @default(CUSTOMER_MENU)
+  handledByUserId     String?
+  handledAt           DateTime?
+  completedAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  restaurantTable     RestaurantTable?     @relation(fields: [restaurantTableId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+  handledByUser       User?                @relation("AssistanceHandledByUser", fields: [handledByUserId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+
+  @@unique([id, restaurantId])
+  @@index([restaurantId, requestType, status, createdAt])
+  @@index([restaurantId, tableRefNormalized, requestType, status])
+  @@index([restaurantId, restaurantTableId])
+  @@index([restaurantId, status, updatedAt(sort: Desc)])
+  @@index([restaurantId, handledByUserId, status, updatedAt(sort: Desc)])
+  @@map("assistance_requests")
+}
+
+model AuditLog {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  actorUserId         String?
+  actorType           AuditLogActorType
+  actorLabel          String?
+  targetType          AuditLogTargetType
+  targetId            String?
+  action              String
+  detailsJson         Json?
+  ipAddress           String?
+  userAgent           String?
+  createdAt           DateTime             @default(now())
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  actorUser           User?                @relation("AuditLogActorUser", fields: [actorUserId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+
+  @@index([restaurantId, createdAt])
+  @@index([restaurantId, targetType, targetId])
+  @@index([restaurantId, actorUserId])
+  @@map("audit_logs")
+}
+
+model LoginEvent {
+  id                  String               @id @default(cuid())
+  restaurantId        String
+  userId              String?
+  usernameAttempted   String
+  result              LoginEventResult
+  failureReason       String?
+  ipAddress           String?
+  userAgent           String?
+  createdAt           DateTime             @default(now())
+
+  restaurant          Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Restrict)
+  user                User?                @relation(fields: [userId, restaurantId], references: [id, restaurantId], onDelete: Restrict)
+
+  @@index([restaurantId, createdAt])
+  @@index([restaurantId, usernameAttempted, createdAt])
+  @@index([restaurantId, result, createdAt])
+  @@map("login_events")
+}
